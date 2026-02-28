@@ -6,6 +6,7 @@ import CourseCard from './CourseCard'
 import ServiceCard from './ServiceCard'
 import MediaSection from './MediaSection'
 import ArticlesSection from './ArticlesSection'
+import ContactSection from './ContactSection'
 
 export default function Dashboard() {
   const { user, logout, isAdmin } = useAuth()
@@ -107,6 +108,8 @@ export default function Dashboard() {
             </div>
           )}
         </section>
+
+        <ContactSection />
       </main>
     </div>
   )
