@@ -65,12 +65,16 @@ export default function Dashboard() {
             alt="E and E Software Solution"
             className="w-full h-52 sm:h-72 object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-enterprise-blue-dark/95 via-enterprise-blue-dark/50 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Welcome to E and E Software Solution</h2>
-            <p className="text-enterprise-blue-light mt-2 max-w-xl">
-              Enterprise software development, training, and consulting. Courses in Java, Spring Boot, React, and cloud — plus custom web apps and API development.
-            </p>
+          <div className="absolute inset-0 bg-gradient-to-t from-enterprise-blue-dark via-enterprise-blue-dark/80 to-enterprise-blue-dark/30" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+            <div className="max-w-xl rounded-lg bg-enterprise-blue-dark/90 px-4 py-3 sm:px-5 sm:py-4 border border-white/10">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white">
+                Welcome to E and E Software Solution
+              </h2>
+              <p className="mt-2 sm:mt-3 text-white/95 text-base sm:text-lg leading-relaxed">
+                Enterprise software development, training, and consulting. Courses in Java, Spring Boot, React, and cloud — plus custom web apps and API development.
+              </p>
+            </div>
           </div>
         </div>
 
