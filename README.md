@@ -4,13 +4,13 @@ Starter full-stack project: **React (Vite)** frontend + **Java Spring Boot 3.x**
 
 ## Features
 
-- **Backend:** JWT auth (Admin / User), PostgreSQL, JPA entities (Service, Course), Spring AI chat endpoint (company knowledge base), WebSocket live chat, REST APIs.
-- **Frontend:** TanStack Query, Tailwind CSS (Enterprise Blue theme), Login/Register, Dashboard (courses & services), floating AI Chat widget, Admin panel (add/edit services).
+- **Backend:** JWT auth (Admin / User), PostgreSQL, JPA entities (Service, Course), **free AI chat** (company knowledge base; optional Groq free tier), WebSocket live chat, REST APIs.
+- **Frontend:** TanStack Query, Tailwind CSS (Enterprise Blue theme), Login/Register, Dashboard with **videos & gallery**, **course/service detail + related content**, floating AI Chat widget (works for all visitors), Admin panel.
 
 ## Prerequisites
 
 - **JDK 17**, **Node.js 18+**, **PostgreSQL** (running locally or adjust `application.yml`).
-- Optional: **OPENAI_API_KEY** for Spring AI (otherwise the AI chat uses a local knowledge base).
+- Optional: **GROQ_API_KEY** for enhanced AI chat (free at [console.groq.com](https://console.groq.com)); otherwise the chat uses the built-in knowledge base.
 
 ## Quick start
 
@@ -41,11 +41,10 @@ cd backend
 Or with Maven installed: `mvn spring-boot:run`.  
 Server: **http://localhost:8080**.
 
-(Optional) To use OpenAI for the AI chat, set env:
+(Optional) For enhanced AI chat (free), get a key at [Groq](https://console.groq.com) and set:
 
 ```bash
-set OPENAI_API_KEY=sk-...
-# or in application.yml: spring.ai.openai.api-key: your-key
+set GROQ_API_KEY=gsk_...
 ```
 
 If the backend fails to start due to missing OpenAI config, add to `application.yml`:

@@ -2,9 +2,9 @@ spring:
   application:
     name: e-and-e-software-backend
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/ee_software}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -20,12 +20,6 @@ spring:
 jwt:
   secret: ${JWT_SECRET:EandESoftwareSolutionJwtSecretKeyForSigningTokenMinimumLength256BitsRequired}
   expiration-ms: 86400000
-
-# Spring AI - excluded by default so app runs without OPENAI_API_KEY (AI uses local knowledge base).
-# Remove the line below and set OPENAI_API_KEY to enable OpenAI.
-spring.autoconfigure.exclude: org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration
-spring.ai.openai.api-key: ${OPENAI_API_KEY:}
-spring.ai.openai.chat.options.model: gpt-3.5-turbo
 
 server:
   port: ${PORT:8080}

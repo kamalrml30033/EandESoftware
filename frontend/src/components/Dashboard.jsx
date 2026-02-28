@@ -2,6 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { coursesApi, servicesApi } from '../api/client'
 import { useAuth } from '../hooks/useAuth'
+import CourseCard from './CourseCard'
+import ServiceCard from './ServiceCard'
+import MediaSection from './MediaSection'
 
 export default function Dashboard() {
   const { user, logout, isAdmin } = useAuth()
@@ -22,28 +25,51 @@ export default function Dashboard() {
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-xl font-semibold">E and E Software Solution</h1>
           <div className="flex items-center gap-4">
-            <span className="text-enterprise-blue-light text-sm">{user?.email}</span>
-            {isAdmin && (
+            {user?.email ? (
+              <>
+                <span className="text-enterprise-blue-light text-sm">{user.email}</span>
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    className="px-3 py-1.5 rounded bg-enterprise-blue-light hover:bg-enterprise-blue-dark text-sm"
+                  >
+                    Admin
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="px-3 py-1.5 rounded bg-enterprise-blue-light hover:bg-enterprise-blue-dark text-sm"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
               <Link
-                to="/admin"
+                to="/login"
                 className="px-3 py-1.5 rounded bg-enterprise-blue-light hover:bg-enterprise-blue-dark text-sm"
               >
-                Admin
+                Login
               </Link>
             )}
-            <button
-              type="button"
-              onClick={logout}
-              className="px-3 py-1.5 rounded bg-enterprise-blue-light hover:bg-enterprise-blue-dark text-sm"
-            >
-              Logout
-            </button>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
-        <h2 className="text-2xl font-semibold text-enterprise-blue-dark mb-6">Dashboard</h2>
+        <div className="rounded-xl overflow-hidden shadow-lg mb-8 bg-enterprise-blue-dark">
+          <img
+            src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&h=400&fit=crop"
+            alt="E and E Software Solution"
+            className="w-full h-48 sm:h-64 object-cover opacity-90"
+          />
+          <div className="p-4 sm:p-6 text-white">
+            <h2 className="text-2xl font-semibold">Welcome to E and E Software Solution</h2>
+            <p className="text-enterprise-blue-light mt-1">Enterprise software development, training, and consulting.</p>
+          </div>
+        </div>
+
+        <MediaSection />
 
         <section className="mb-10">
           <h3 className="text-lg font-medium text-slate-700 mb-3">Courses</h3>
@@ -54,16 +80,7 @@ export default function Dashboard() {
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {courses.map((c) => (
-                <div
-                  key={c.id}
-                  className="p-4 rounded-lg border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <h4 className="font-medium text-enterprise-blue">{c.title}</h4>
-                  <p className="text-sm text-slate-600 mt-1 line-clamp-2">{c.description}</p>
-                  {c.durationHours != null && (
-                    <p className="text-xs text-slate-500 mt-2">{c.durationHours} hours</p>
-                  )}
-                </div>
+                <CourseCard key={c.id} course={c} allCourses={courses} />
               ))}
             </div>
           )}
@@ -78,16 +95,7 @@ export default function Dashboard() {
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((s) => (
-                <div
-                  key={s.id}
-                  className="p-4 rounded-lg border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <h4 className="font-medium text-enterprise-blue">{s.name}</h4>
-                  <p className="text-sm text-slate-600 mt-1 line-clamp-2">{s.description}</p>
-                  {s.price != null && (
-                    <p className="text-sm font-medium text-enterprise-blue mt-2">${s.price}</p>
-                  )}
-                </div>
+                <ServiceCard key={s.id} service={s} allServices={services} />
               ))}
             </div>
           )}

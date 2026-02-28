@@ -35,8 +35,6 @@ export default function ChatWidget() {
     sendMutation.mutate(text)
   }
 
-  if (!token) return null
-
   return (
     <>
       <button
@@ -55,7 +53,7 @@ export default function ChatWidget() {
           </div>
           <div className="flex-1 overflow-y-auto p-3 space-y-2 min-h-[200px]">
             {messages.length === 0 && (
-              <p className="text-slate-500 text-sm">Ask about our services and courses.</p>
+              <p className="text-slate-500 text-sm">Ask about our courses, services, contact, or pricing.</p>
             )}
             {messages.map((m, i) => (
               <div

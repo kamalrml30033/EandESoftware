@@ -1,43 +1,78 @@
 package com.ee.software.service;
 
 import com.ee.software.ai.CompanyKnowledgeBase;
-import lombok.RequiredArgsConstructor;
-import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class AiChatService {
 
-    private final ChatModel chatModel;
+    private static final String GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions";
+    private static final String GROQ_MODEL = "llama-3.1-8b-instant";
 
-    public AiChatService(@Autowired(required = false) ChatModel chatModel) {
-        this.chatModel = chatModel;
+    private final String groqApiKey;
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public AiChatService(@Value("${GROQ_API_KEY:}") String groqApiKey) {
+        this.groqApiKey = groqApiKey != null && !groqApiKey.isBlank() ? groqApiKey : null;
     }
 
     public String chat(String userQuery) {
-        String context = CompanyKnowledgeBase.asContext();
-        if (chatModel != null) {
-            String promptText = "Based on the following company knowledge base, answer the user question concisely. "
-                    + "If the answer is not in the knowledge base, say so.\n\nKnowledge base:\n" + context
-                    + "\n\nUser question: " + userQuery;
-            return chatModel.call(new Prompt(promptText)).getResult().getOutput().getContent();
+        if (userQuery == null || userQuery.isBlank()) {
+            return "Please ask a question about our courses, services, or contact details.";
         }
-        return answerFromKnowledgeBaseOnly(userQuery, context);
+        String matched = CompanyKnowledgeBase.matchAnswer(userQuery);
+        // Prefer local KB when we have a match so "what is java" etc. get the right answer
+        if (matched != null) return matched;
+        if (groqApiKey != null) {
+            try {
+                return callGroq(userQuery, null);
+            } catch (Exception e) {
+                // fallback to default
+            }
+        }
+        return defaultAnswer(userQuery);
     }
 
-    private String answerFromKnowledgeBaseOnly(String query, String context) {
-        String q = query.toLowerCase();
-        if (q.contains("contact") || q.contains("email") || q.contains("support")) {
-            return "You can reach us at support@ee-software.com. Office hours: Mon–Fri 9–17.";
+    private String callGroq(String userQuery, String localHint) throws Exception {
+        String systemPrompt = "You are the assistant for E and E Software Solution (enterprise software development, consulting, training). "
+                + "Answer briefly and professionally based on this knowledge: " + CompanyKnowledgeBase.asContext()
+                + (localHint != null ? " Relevant info: " + localHint : "");
+        ObjectNode root = objectMapper.createObjectNode();
+        root.put("model", GROQ_MODEL);
+        root.put("max_tokens", 256);
+        ArrayNode messages = root.putArray("messages");
+        messages.addObject().put("role", "system").put("content", systemPrompt);
+        messages.addObject().put("role", "user").put("content", userQuery);
+        String body = objectMapper.writeValueAsString(root);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(groqApiKey);
+        ResponseEntity<String> res = restTemplate.postForEntity(GROQ_CHAT_URL, new HttpEntity<>(body, headers), String.class);
+        if (!res.getStatusCode().is2xxSuccessful() || res.getBody() == null) return defaultAnswer(userQuery);
+        JsonNode resRoot = objectMapper.readTree(res.getBody());
+        JsonNode choices = resRoot.get("choices");
+        if (choices != null && choices.isArray() && choices.size() > 0) {
+            JsonNode msg = choices.get(0).get("message");
+            if (msg != null) {
+                JsonNode content = msg.get("content");
+                if (content != null) return content.asText().trim();
+            }
         }
-        if (q.contains("course") || q.contains("training")) {
-            return "We offer courses in Java, Spring Boot, React, and cloud technologies.";
-        }
-        if (q.contains("service") || q.contains("development")) {
-            return "Our services include custom web applications, API development, and system integration.";
-        }
-        return "E and E Software Solution provides enterprise software development, consulting, and training. " + context;
+        return defaultAnswer(userQuery);
+    }
+
+    private String defaultAnswer(String query) {
+        return "I can help with: courses (Java, Spring, React), services (web apps, APIs), and contact info. Try asking e.g. \"What courses do you offer?\" or \"How do I contact you?\"";
     }
 }
