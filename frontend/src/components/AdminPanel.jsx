@@ -10,10 +10,11 @@ export default function AdminPanel() {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState({ name: '', description: '', price: '', active: true })
 
-  const { data: services = [], isLoading } = useQuery({
+  const { data: servicesData, isLoading } = useQuery({
     queryKey: ['admin', 'services'],
     queryFn: adminServicesApi.list,
   })
+  const services = Array.isArray(servicesData) ? servicesData : []
 
   const createMutation = useMutation({
     mutationFn: adminServicesApi.create,

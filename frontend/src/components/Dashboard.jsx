@@ -5,14 +5,16 @@ import { useAuth } from '../hooks/useAuth'
 
 export default function Dashboard() {
   const { user, logout, isAdmin } = useAuth()
-  const { data: courses = [], isLoading: coursesLoading } = useQuery({
+  const { data: coursesData, isLoading: coursesLoading } = useQuery({
     queryKey: ['courses'],
     queryFn: coursesApi.list,
   })
-  const { data: services = [], isLoading: servicesLoading } = useQuery({
+  const { data: servicesData, isLoading: servicesLoading } = useQuery({
     queryKey: ['services'],
     queryFn: servicesApi.list,
   })
+  const courses = Array.isArray(coursesData) ? coursesData : []
+  const services = Array.isArray(servicesData) ? servicesData : []
 
   return (
     <div className="min-h-screen">

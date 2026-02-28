@@ -28,12 +28,16 @@ export const authApi = {
   register: (data) => api('POST', '/api/auth/register', data),
 }
 
+function asArray(res) {
+  return Array.isArray(res) ? res : []
+}
+
 export const coursesApi = {
-  list: () => api('GET', '/api/courses'),
+  list: () => api('GET', '/api/courses').then(asArray),
 }
 
 export const servicesApi = {
-  list: () => api('GET', '/api/services'),
+  list: () => api('GET', '/api/services').then(asArray),
   getById: (id) => api('GET', `/api/services/${id}`),
 }
 
