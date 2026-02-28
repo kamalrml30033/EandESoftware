@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth'
 import CourseCard from './CourseCard'
 import ServiceCard from './ServiceCard'
 import MediaSection from './MediaSection'
+import ArticlesSection from './ArticlesSection'
 
 export default function Dashboard() {
   const { user, logout, isAdmin } = useAuth()
@@ -20,18 +21,18 @@ export default function Dashboard() {
   const services = Array.isArray(servicesData) ? servicesData : []
 
   return (
-    <div className="min-h-screen">
-      <header className="bg-enterprise-blue text-white shadow">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      <header className="bg-enterprise-blue-dark text-white shadow-lg">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-semibold">E and E Software Solution</h1>
-          <div className="flex items-center gap-4">
+          <h1 className="text-xl font-semibold tracking-tight">E and E Software Solution</h1>
+          <nav className="flex items-center gap-3">
             {user?.email ? (
               <>
-                <span className="text-enterprise-blue-light text-sm">{user.email}</span>
+                <span className="text-enterprise-blue-light/90 text-sm hidden sm:inline">{user.email}</span>
                 {isAdmin && (
                   <Link
                     to="/admin"
-                    className="px-3 py-1.5 rounded bg-enterprise-blue-light hover:bg-enterprise-blue-dark text-sm"
+                    className="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-sm font-medium transition-colors"
                   >
                     Admin
                   </Link>
@@ -39,7 +40,7 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={logout}
-                  className="px-3 py-1.5 rounded bg-enterprise-blue-light hover:bg-enterprise-blue-dark text-sm"
+                  className="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-sm font-medium transition-colors"
                 >
                   Logout
                 </button>
@@ -47,32 +48,37 @@ export default function Dashboard() {
             ) : (
               <Link
                 to="/login"
-                className="px-3 py-1.5 rounded bg-enterprise-blue-light hover:bg-enterprise-blue-dark text-sm"
+                className="px-3 py-1.5 rounded-lg bg-enterprise-blue-accent hover:bg-enterprise-blue-light text-sm font-medium transition-colors"
               >
                 Login
               </Link>
             )}
-          </div>
+          </nav>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="rounded-xl overflow-hidden shadow-lg mb-8 bg-enterprise-blue-dark">
+        <div className="relative rounded-2xl overflow-hidden shadow-card-hover mb-10">
           <img
-            src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&h=400&fit=crop"
+            src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&h=480&fit=crop"
             alt="E and E Software Solution"
-            className="w-full h-48 sm:h-64 object-cover opacity-90"
+            className="w-full h-52 sm:h-72 object-cover"
           />
-          <div className="p-4 sm:p-6 text-white">
-            <h2 className="text-2xl font-semibold">Welcome to E and E Software Solution</h2>
-            <p className="text-enterprise-blue-light mt-1">Enterprise software development, training, and consulting.</p>
+          <div className="absolute inset-0 bg-gradient-to-t from-enterprise-blue-dark/95 via-enterprise-blue-dark/50 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Welcome to E and E Software Solution</h2>
+            <p className="text-enterprise-blue-light mt-2 max-w-xl">
+              Enterprise software development, training, and consulting. Courses in Java, Spring Boot, React, and cloud — plus custom web apps and API development.
+            </p>
           </div>
         </div>
 
+        <ArticlesSection />
         <MediaSection />
 
         <section className="mb-10">
-          <h3 className="text-lg font-medium text-slate-700 mb-3">Courses</h3>
+          <h2 className="section-heading mb-2">Courses</h2>
+          <p className="text-slate-600 mb-4 text-sm">Structured training with hands-on projects.</p>
           {coursesLoading ? (
             <p className="text-slate-500">Loading courses...</p>
           ) : courses.length === 0 ? (
@@ -87,7 +93,8 @@ export default function Dashboard() {
         </section>
 
         <section>
-          <h3 className="text-lg font-medium text-slate-700 mb-3">Services</h3>
+          <h2 className="section-heading mb-2">Services</h2>
+          <p className="text-slate-600 mb-4 text-sm">Custom development and integration for your business.</p>
           {servicesLoading ? (
             <p className="text-slate-500">Loading services...</p>
           ) : services.length === 0 ? (

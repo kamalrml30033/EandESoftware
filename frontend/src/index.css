@@ -4,7 +4,17 @@
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  @apply text-slate-800;
+}
+
+@layer components {
+  .section-heading {
+    @apply text-xl font-semibold text-enterprise-blue-dark tracking-tight;
+  }
+  .link-external {
+    @apply text-enterprise-blue hover:text-enterprise-blue-light font-medium underline underline-offset-2;
+  }
 }

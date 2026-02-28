@@ -11,12 +11,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-enterprise-blue-dark/5 flex flex-col items-center justify-center p-4">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-enterprise-blue">E and E Software Solution</h1>
+        <h1 className="text-3xl font-bold text-enterprise-blue-dark tracking-tight">E and E Software Solution</h1>
         <p className="text-slate-600 mt-2">Sign in or create an account</p>
       </div>
-      <LoginRegister />
+      <div className="w-full max-w-md">
+        <LoginRegister />
+      </div>
     </div>
   )
 }

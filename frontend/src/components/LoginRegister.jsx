@@ -35,7 +35,7 @@ export default function LoginRegister({ defaultTab = 'login' }) {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="flex rounded-t-lg overflow-hidden border-b border-enterprise-blue/20">
+      <div className="flex rounded-t-xl overflow-hidden border border-b-0 border-slate-200 bg-slate-50">
         <button
           type="button"
           onClick={() => setTab('login')}
@@ -60,7 +60,7 @@ export default function LoginRegister({ defaultTab = 'login' }) {
         </button>
       </div>
 
-      <div className="bg-white rounded-b-lg shadow-lg border border-t-0 border-enterprise-blue/20 p-6">
+      <div className="bg-white rounded-b-xl shadow-card border border-t-0 border-slate-200 p-6">
         {tab === 'login' ? (
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
