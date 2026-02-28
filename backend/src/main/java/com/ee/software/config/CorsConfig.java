@@ -20,17 +20,23 @@ public class CorsConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        List<String> origins = Arrays.stream(allowedOriginsConfig.split(","))
+        List<String> fromConfig = Arrays.stream(allowedOriginsConfig.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
-        if (origins.isEmpty()) {
-            origins.add("http://localhost:5173");
+        // Allow any Vercel deployment so OPTIONS preflight works without exact ALLOWED_ORIGINS
+        List<String> originPatterns = new java.util.ArrayList<>(fromConfig);
+        originPatterns.add("https://*.vercel.app");
+        originPatterns.add("http://localhost:*");
+        originPatterns.add("http://127.0.0.1:*");
+        if (originPatterns.stream().noneMatch(s -> s.contains("localhost"))) {
+            originPatterns.add("http://localhost:5173");
         }
-        config.setAllowedOrigins(origins);
+        config.setAllowedOriginPatterns(originPatterns);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
