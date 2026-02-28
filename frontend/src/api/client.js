@@ -1,4 +1,9 @@
-const API_BASE = import.meta.env.VITE_API_URL || ''
+// Use env at build time; fallback for production when Vercel build had no env
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== 'undefined' && window.location?.host?.includes('vercel.app')
+    ? 'https://e-and-e-backend.onrender.com'
+    : '')
 
 function getToken() {
   return localStorage.getItem('token')
