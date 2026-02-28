@@ -4,6 +4,23 @@ Deploy **frontend** (Vercel), **backend** (Render), and **database** (Neon or Re
 
 ---
 
+## Credentials – where to get them and where to set them
+
+**Rule:** Never put database passwords, API keys, or JWT secrets in code or in GitHub. Use environment variables only.
+
+| Credential | Where you get it | Where you set it |
+|------------|------------------|------------------|
+| **Database URL** | Neon: Connection details → build JDBC URL.<br>Render Postgres: Internal/External URL → convert to JDBC. | **Render** (backend service) → Environment → `SPRING_DATASOURCE_URL` |
+| **DB username** | Neon: Connection details → User.<br>Render: from the Postgres URL. | **Render** → Environment → `SPRING_DATASOURCE_USERNAME` |
+| **DB password** | Neon: Connection details → Password.<br>Render: from the Postgres URL. | **Render** → Environment → `SPRING_DATASOURCE_PASSWORD` |
+| **JWT secret** | You choose: long random string (e.g. 32+ chars). Optional in dev. | **Render** → Environment → `JWT_SECRET` (optional; app has a default) |
+| **Backend URL** | After deploying backend on Render: e.g. `https://your-service.onrender.com` | **Vercel** → Project → Settings → Environment Variables → `VITE_API_URL` |
+| **Frontend URL** | After deploying frontend on Vercel: e.g. `https://your-app.vercel.app` | **Render** (backend) → Environment → `ALLOWED_ORIGINS` (so CORS allows your UI) |
+
+**Summary:** Database credentials and `ALLOWED_ORIGINS` live in **Render** (backend). The backend URL lives in **Vercel** (frontend).
+
+---
+
 ## 1. Free database (Neon or Render)
 
 ### Option A: Neon (recommended – free tier, no credit card)

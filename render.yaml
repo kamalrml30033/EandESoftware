@@ -1,12 +1,12 @@
 # Render Blueprint - deploy backend (see DEPLOY.md for DB + env setup)
+# Java is not a native runtime on Render; use Docker.
 services:
   - type: web
     name: e-and-e-backend
-    runtime: java
+    runtime: docker
     plan: free
-    rootDir: backend
-    buildCommand: mvn clean package -DskipTests
-    startCommand: java -jar target/backend-1.0.0-SNAPSHOT.jar
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
     envVars:
       - key: PORT
         value: 8080
